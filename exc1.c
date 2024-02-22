@@ -171,7 +171,7 @@ void redirects_checker(char* input) {
 
 void pipe_executor(char* input) {
 	//stdin = 0, stdout = 1, stderr = 2
-	int i, pid, status, prev_output, fd[2]; //fd[0] is the read end and fd[1] is the write end
+	int i, pid, status, prev_output, fd[2], flag = 0; //fd[0] is the read end and fd[1] is the write end
 	char** args;
 	char** pipe_data;
 	pipe_data = split_arguments(input, "|");
@@ -206,8 +206,9 @@ void pipe_executor(char* input) {
 		} else if (pid > 0) { //Parent
 			close(fd[1]);
 			waitpid(-1, &status, 0); //Waiting for child process to finish
-			if (i != 0) close(prev_output);
+			if (flag) close(prev_output);
 			prev_output = fd[0];
+			flag = 1;
 		} else { //Failure
 			perror("Unfortunatelly, an error has been encountered which prevented the forking progress... :-(");
 			break;
