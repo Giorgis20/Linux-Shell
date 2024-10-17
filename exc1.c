@@ -8,15 +8,17 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#define BUFFER_DEFAULT_SIZE 16
+
 char* readInput() {
 	char* input;
-	int length = 0, counter = 16, c;
+	int length = 0, counter = BUFFER_DEFAULT_SIZE, c;
 	input = malloc(sizeof(char) * counter);
 	c = getchar();
 	while (c != EOF && c != '\n') {
 		input[length++] = c;
 		if (length == counter) {
-			counter += 16;
+			counter += BUFFER_DEFAULT_SIZE;
 			input = realloc(input, sizeof(char)*counter);
 		}
 		c = getchar();
@@ -38,13 +40,13 @@ void clearSpaces(char* input) {
 char** split_arguments(char* input, const char* delimeter) {
 	char** arguments;
 	char* token;
-	int length = 0, counter = 4;
+	int length = 0, counter = BUFFER_DEFAULT_SIZE;
 	arguments = malloc(sizeof(char*) * counter);
 	token = strtok(input, delimeter);
 	while (token) {
 		arguments[length++] = token;
 		if (length == counter) {
-			counter += 4;
+			counter += BUFFER_DEFAULT_SIZE;
 			arguments = realloc(arguments, sizeof(char*) * counter);
 		}
 		token = strtok(NULL, delimeter);
